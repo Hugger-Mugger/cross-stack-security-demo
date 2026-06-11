@@ -75,3 +75,29 @@ git add README.md db/setup.sql docker-compose.yml scripts/run.sh
 git commit -m "Day 1 demo complete: RLS isolation working with tenant_user"
 git push origin main
 ```
+
+## ✅ Day 2 Deliverables
+
+- Separate **staging** (`demo_staging` on port 5433) and **production** (`demo_prod` on port 5434) environments.
+- Isolation proof: inserts in staging and prod show independent rows.
+- Rollback drill:
+  1. Simulate bad release in prod:
+     ```sql
+     ALTER TABLE logs DROP COLUMN message;
+     ```
+     → Prod broke.
+  2. Show staging unaffected:
+     ```sql
+     SELECT * FROM logs;
+     ```
+  3. Rollback prod:
+     ```bash
+     docker-compose -f docker-compose.prod.yml down -v
+     docker-compose -f docker-compose.prod.yml up -d
+     ```
+  4. Verify recovery:
+     ```sql
+     INSERT INTO logs (tenant_id, message) VALUES (2, 'Recovered prod');
+     SELECT * FROM logs;
+     ```
+- This demonstrates **release recovery reflexes**: staging safe, prod recoverable.

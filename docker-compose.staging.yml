@@ -1,0 +1,13 @@
+version: "3.9"
+services:
+  postgres-staging:
+    image: postgres:15
+    container_name: demo-postgres-staging
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: demo_staging
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./db/setup-staging.sql:/docker-entrypoint-initdb.d/setup.sql
