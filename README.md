@@ -101,3 +101,10 @@ git push origin main
      SELECT * FROM logs;
      ```
 - This demonstrates **release recovery reflexes**: staging safe, prod recoverable.
+## 📌 Day 2 Notes
+
+- **Environment separation**: Staging (`demo_staging`) and Production (`demo_prod`) run on separate ports with independent data.  
+- **Rollback reflex**: Simulated bad release in prod (`DROP COLUMN message`) → queries failed → rollback with container re‑init → prod recovered.  
+- **Crypto reflex**: Rust binary signing/verification with public/private keys to prove release integrity.  
+- **Resilience proof**: Staging remained safe while prod was broken, then recovered.  
+
