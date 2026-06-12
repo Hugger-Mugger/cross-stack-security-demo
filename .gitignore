@@ -31,3 +31,6 @@ private.pem
 
 # Environment files
 .env
+
+#PEM files
+*.pem
