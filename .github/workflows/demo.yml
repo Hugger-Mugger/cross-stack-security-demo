@@ -41,6 +41,8 @@ jobs:
           exit 1
 
       - name: Test staging
+        env:
+          PGPASSWORD: secret
         run: psql -h localhost -U tenant_user -d demo_staging -c "SELECT * FROM logs;"
 
       - name: Deploy prod containers (hybrid)
