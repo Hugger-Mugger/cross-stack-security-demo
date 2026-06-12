@@ -1,14 +1,13 @@
 # Cross‑Stack Security Demo
 
 This project demonstrates a reproducible **incident response reflex** across Rust, TypeScript, SQL, and Shell.  
-It highlights tenant isolation, release rollback, and crypto/security instincts — all in one modular setup.
+It highlights **tenant isolation**, **release rollback**, and **crypto/security instincts** — all in one modular setup.
 
 ---
 
 ## 🚀 Quick Start
 
-Clone the repo and start containers:
-
+### Clone & Run
 ```bash
 git clone https://github.com/Hugger-Mugger/cross-stack-security-demo.git
 cd cross-stack-security-demo
@@ -23,7 +22,6 @@ Open a new terminal:
 bash
 psql -h localhost -U tenant_user -d demo
 Password: secret
-
 🧪 Tenant Isolation (RLS)
 sql
 SET app.tenant_id = 1;
@@ -53,32 +51,53 @@ sql
 INSERT INTO logs (tenant_id, message) VALUES (1, 'Recovered!');
 SELECT * FROM logs;
 ✅ Prod broken → rollback reflex → prod recovered.
-
-Staging remains unaffected.
+✅ Staging remains unaffected.
 
 🔐 Crypto/Security Instincts
-Verify Rust binary signature:
-
+Build Rust binary
 bash
-openssl dgst -sha256 -verify public.pem -signature rust-service.sig rust-service
-Output: Verified OK
+cd rust-service
+cargo build --release
+cd ..
+Sign binary
+bash
+openssl dgst -sha256 -sign private.pem -out rust-service.sig rust-service/target/release/rust-service
+Verify signature
+bash
+./scripts/verify.sh
+Expected output:
 
-Check environment separation:
+Code
+Signature valid, running program...
+📌 Environment Separation
+Check containers:
 
 bash
 docker-compose -f docker-compose.staging.yml ps
 docker-compose -f docker-compose.prod.yml ps
 ✅ Staging vs prod isolated.
-
 ✅ Release integrity proven.
 
-📌 Reproducibility Guide
-Anyone with Docker, Postgres (psql), and OpenSSL can reproduce this demo:
+✅ Reproducibility Guide
+Anyone with Docker, Postgres (psql), Rust, and OpenSSL can reproduce this demo:
 
 Clone repo
 
 Run containers (./scripts/run.sh)
 
-Follow steps above for tenant isolation, rollback reflex, and signature verification
+Follow steps for tenant isolation, rollback reflex, and signature verification
 
 👉 Same reflex proof will be produced locally.
+
+🎯 Founder Demo Angle
+This repo demonstrates:
+
+Tenant isolation
+
+Rollback reflex
+
+Crypto verification
+
+Reproducibility guide
+
+Clone → Build → Run → Verify → ✅ Reflexes green.

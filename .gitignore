@@ -1,0 +1,33 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Rust build artifacts
+rust-service/target/
+rust-service/rust-service.sig
+
+# Docker & runtime
+*.pid
+*.log
+*.tmp
+
+# OS / Editor junk
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Keys (keep private.pem local only)
+private.pem
+
+# Build artifacts
+*.out
+*.o
+*.so
+*.exe
+*.dll
+
+# Environment files
+.env
