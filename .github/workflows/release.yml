@@ -31,3 +31,9 @@ jobs:
         with:
           name: rust-service
           path: rust-service/target/release/rust-service
+
+      - name: Build and Push Docker Image
+        run: |
+          docker build -t ghcr.io/abhijeetkumar/cross-stack-security-demo:${{ github.ref_name }} .
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+          docker push ghcr.io/abhijeetkumar/cross-stack-security-demo:${{ github.ref_name }}

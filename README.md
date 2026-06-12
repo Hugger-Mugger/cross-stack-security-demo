@@ -1,4 +1,8 @@
+
 # Cross‑Stack Security Demo
+
+![Demo Pipeline](https://github.com/abhijeetkumar/cross-stack-security-demo/actions/workflows/demo.yml/badge.svg)
+![Release Pipeline](https://github.com/abhijeetkumar/cross-stack-security-demo/actions/workflows/release.yml/badge.svg)
 
 This project demonstrates a reproducible **incident response reflex** across Rust, TypeScript, SQL, and Shell.  
 It highlights **tenant isolation**, **release rollback**, and **crypto/security instincts** — all in one modular setup.
@@ -12,92 +16,132 @@ It highlights **tenant isolation**, **release rollback**, and **crypto/security 
 git clone https://github.com/Hugger-Mugger/cross-stack-security-demo.git
 cd cross-stack-security-demo
 ./scripts/run.sh
+```
+
 Or run in detached mode:
-
-bash
+```bash
 docker-compose up -d
-🔑 Connect to Database
-Open a new terminal:
+```
 
-bash
+---
+
+## 🔑 Connect to Database
+```bash
 psql -h localhost -U tenant_user -d demo
 Password: secret
-🧪 Tenant Isolation (RLS)
-sql
+```
+
+---
+
+## 🧪 Tenant Isolation (RLS)
+```sql
 SET app.tenant_id = 1;
 SELECT * FROM logs;  -- shows only Tenant 1 rows
 
 SET app.tenant_id = 2;
 SELECT * FROM logs;  -- shows only Tenant 2 rows
-Superusers (postgres) bypass RLS.
+```
 
-Normal users (tenant_user) restricted by policy.
+- Superusers (`postgres`) bypass RLS  
+- Normal users (`tenant_user`) restricted by policy  
 
-✅ Proves row‑level security isolation.
+✅ Proves **row‑level security isolation**
 
-🔄 Rollback Reflex
+---
+
+## 🔄 Rollback Reflex
 Simulate bad release in production:
-
-sql
+```sql
 ALTER TABLE logs DROP COLUMN message;
 SELECT * FROM logs;  -- fails
+```
+
 Run rollback:
-
-bash
+```bash
 ./scripts/rollback.sh
-Verify recovery:
+```
 
-sql
+Verify recovery:
+```sql
 INSERT INTO logs (tenant_id, message) VALUES (1, 'Recovered!');
 SELECT * FROM logs;
-✅ Prod broken → rollback reflex → prod recovered.
-✅ Staging remains unaffected.
+```
 
-🔐 Crypto/Security Instincts
-Build Rust binary
-bash
+✅ Prod broken → rollback reflex → prod recovered  
+✅ Staging remains unaffected  
+
+---
+
+## 🔐 Crypto/Security Instincts
+
+### Build Rust binary
+```bash
 cd rust-service
 cargo build --release
 cd ..
-Sign binary
-bash
+```
+
+### Sign binary
+```bash
 openssl dgst -sha256 -sign private.pem -out rust-service.sig rust-service/target/release/rust-service
-Verify signature
-bash
+```
+
+### Verify signature
+```bash
 ./scripts/verify.sh
+```
+
 Expected output:
-
-Code
+```
 Signature valid, running program...
-📌 Environment Separation
-Check containers:
+```
 
-bash
+---
+
+## 📌 Environment Separation
+```bash
 docker-compose -f docker-compose.staging.yml ps
 docker-compose -f docker-compose.prod.yml ps
-✅ Staging vs prod isolated.
-✅ Release integrity proven.
+```
 
-✅ Reproducibility Guide
+✅ Staging vs prod isolated  
+✅ Release integrity proven  
+
+---
+
+## ✅ Reproducibility Guide
 Anyone with Docker, Postgres (psql), Rust, and OpenSSL can reproduce this demo:
 
-Clone repo
-
-Run containers (./scripts/run.sh)
-
-Follow steps for tenant isolation, rollback reflex, and signature verification
+1. Clone repo  
+2. Run containers (`./scripts/run.sh`)  
+3. Follow steps for tenant isolation, rollback reflex, and signature verification  
 
 👉 Same reflex proof will be produced locally.
 
-🎯 Founder Demo Angle
+---
+
+## 🎯 Demo Angle
 This repo demonstrates:
-
-Tenant isolation
-
-Rollback reflex
-
-Crypto verification
-
-Reproducibility guide
+- **Tenant isolation**  
+- **Rollback reflex**  
+- **Crypto verification**  
+- **Reproducibility guide**  
 
 Clone → Build → Run → Verify → ✅ Reflexes green.
+
+---
+
+## 📦 Release Pipeline
+- Push a tag `v*` → triggers **Build and Release** workflow  
+- Builds Rust binary  
+- Signs binary with OpenSSL  
+- Uploads artifact  
+- Publishes Docker image to GHCR (optional)  
+
+Run container directly:
+```bash
+docker run ghcr.io/abhijeetkumar/cross-stack-security-demo:v1
+```
+```
+
+-
