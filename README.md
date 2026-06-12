@@ -143,5 +143,3 @@ Run container directly:
 docker run ghcr.io/abhijeetkumar/cross-stack-security-demo:v1
 ```
 ```
-
--
