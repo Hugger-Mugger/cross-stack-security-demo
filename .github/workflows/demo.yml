@@ -5,6 +5,20 @@ jobs:
     runs-on: ubuntu-latest
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: tenant_user
+          POSTGRES_PASSWORD: secret
+          POSTGRES_DB: demo_staging
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U tenant_user -d demo_staging"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
     steps:
       - uses: actions/checkout@v4
 
@@ -17,6 +31,14 @@ jobs:
             echo "Using docker compose (plugin)"
             docker compose -f docker-compose.staging.yml up -d
           fi
+
+      - name: Wait for Postgres
+        run: |
+          for i in {1..10}; do
+            pg_isready -h localhost -p 5432 -U tenant_user -d demo_staging && exit 0
+            sleep 5
+          done
+          exit 1
 
       - name: Test staging
         run: psql -h localhost -U tenant_user -d demo_staging -c "SELECT * FROM logs;"

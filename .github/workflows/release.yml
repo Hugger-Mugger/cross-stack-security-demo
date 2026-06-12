@@ -27,8 +27,7 @@ jobs:
         run: openssl dgst -sha256 -sign private.pem -out rust-service.sig rust-service/target/release/rust-service
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: rust-service
           path: rust-service/target/release/rust-service
-
