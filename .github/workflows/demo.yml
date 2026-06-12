@@ -5,9 +5,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Run staging
-        run: docker-compose -f docker-compose.staging.yml up -d
+
+      - name: Run staging containers (hybrid)
+        run: |
+          if command -v docker-compose >/dev/null 2>&1; then
+            echo "Using docker-compose (legacy binary)"
+            docker-compose -f docker-compose.staging.yml up -d
+          else
+            echo "Using docker compose (plugin)"
+            docker compose -f docker-compose.staging.yml up -d
+          fi
+
       - name: Test staging
         run: psql -h localhost -U tenant_user -d demo_staging -c "SELECT * FROM logs;"
-      - name: Deploy prod
-        run: docker-compose -f docker-compose.prod.yml up -d
+
+      - name: Deploy prod containers (hybrid)
+        run: |
+          if command -v docker-compose >/dev/null 2>&1; then
+            echo "Using docker-compose (legacy binary)"
+            docker-compose -f docker-compose.prod.yml up -d
+          else
+            echo "Using docker compose (plugin)"
+            docker compose -f docker-compose.prod.yml up -d
+          fi
