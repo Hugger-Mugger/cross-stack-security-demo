@@ -1,0 +1,19 @@
+name: Build and Release
+on:
+  push:
+    tags:
+      - 'v*'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build
+        run: cargo build --release
+      - name: Sign Binary
+        run: openssl dgst -sha256 -sign private.pem -out rust-service.sig target/release/rust-service
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: rust-service
+          path: target/release/rust-service

@@ -1,0 +1,13 @@
+name: Demo Pipeline
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run staging
+        run: docker-compose -f docker-compose.staging.yml up -d
+      - name: Test staging
+        run: psql -h localhost -U tenant_user -d demo_staging -c "SELECT * FROM logs;"
+      - name: Deploy prod
+        run: docker-compose -f docker-compose.prod.yml up -d

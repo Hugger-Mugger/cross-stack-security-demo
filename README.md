@@ -108,3 +108,8 @@ git push origin main
 - **Crypto reflex**: Rust binary signing/verification with public/private keys to prove release integrity.  
 - **Resilience proof**: Staging remained safe while prod was broken, then recovered.  
 
+## ✅ Day 3 Deliverables
+- GitHub Actions pipeline: staging → prod deploy with rollback.
+- Crypto reflex: SHA‑256 hashing of messages before insert (Rust).
+- Cross‑stack polish: Rust hashing, TypeScript query, Shell rollback.
+- Repo is demo‑ready and interview‑ready.
