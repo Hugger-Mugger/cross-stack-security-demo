@@ -39,6 +39,17 @@ jobs:
             sleep 5
           done
           exit 1
+      - name: Init staging schema
+        env:
+          PGPASSWORD: secret
+        run: |
+          psql -h localhost -U tenant_user -d demo_staging <<'EOF'
+          CREATE TABLE IF NOT EXISTS logs (
+            id SERIAL PRIMARY KEY,
+            tenant_id INT NOT NULL,
+            message TEXT
+          );
+          EOF
 
       - name: Test staging
         env:
