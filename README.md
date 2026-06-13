@@ -1,9 +1,6 @@
 
 # Cross‑Stack Security Demo
 
-![Demo Pipeline](https://github.com/abhijeetkumar/cross-stack-security-demo/actions/workflows/demo.yml/badge.svg)
-![Release Pipeline](https://github.com/abhijeetkumar/cross-stack-security-demo/actions/workflows/release.yml/badge.svg)
-
 This project demonstrates a reproducible **incident response reflex** across Rust, TypeScript, SQL, and Shell.  
 It highlights **tenant isolation**, **release rollback**, and **crypto/security instincts** — all in one modular setup.
 
@@ -141,5 +138,4 @@ Clone → Build → Run → Verify → ✅ Reflexes green.
 Run container directly:
 ```bash
 docker run ghcr.io/abhijeetkumar/cross-stack-security-demo:v1
-```
 ```
